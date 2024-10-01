@@ -139,7 +139,7 @@ class D3PMLVBLoss(KLDivLoss):
                 prior = sample_prior(q_true.shape[0], q_true.shape[1], _len=self.K)
                 prior = prior.to(tgt.device)
                 kl_loss_i = super().forward(prior.log(), q_true)  # fKLDivLoss expects input in log-space
-                #print("KL SHOULD BE ~ZERO", kl_loss_i)
+                print("KL SHOULD BE ~ZERO", kl_loss_i)
                 losses.append(kl_loss_i)
             else:
                 # D KL (L_t-1) -> (q(x|x_t, x_0), p_theta)

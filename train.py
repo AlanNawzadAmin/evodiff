@@ -127,7 +127,7 @@ def train(gpu, args):
         data_top_dir = os.getenv('PT_DATA_DIR') + '/'
         ptjob = True
     except:
-        data_top_dir = home + '/Desktop/DMs/data/'
+        data_top_dir = '/scratch/aa11803/evodiff/data/'
         ptjob = False
     data_dir = data_top_dir + config['dataset'] + '/'
     if args.mini_run:

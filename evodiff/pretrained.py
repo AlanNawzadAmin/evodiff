@@ -11,8 +11,9 @@ from sequence_models.collaters import MSAAbsorbingCollater
 import esm
 
 
+
 def load_sequence_checkpoint(model_name, config_path, diffusion_timesteps, tokenizer=Tokenizer(), causal=False,
-                         n_tokens = len(MSA_ALPHABET)):
+                         n_tokens=len(MSA_ALPHABET), load=True):
     with open(config_path, 'r') as f:
         config = json.load(f)
     d_embed = config['d_embed']
@@ -40,14 +41,15 @@ def load_sequence_checkpoint(model_name, config_path, diffusion_timesteps, token
                           causal=causal, padding_idx=masking_idx, rank=weight_rank, dropout=dropout,
                           tie_weights=tie_weights, final_ln=final_norm, slim=slim, activation=activation,
                           timesteps=diffusion_timesteps)
-    state_dict = download_model(model_name)
-    # sd = torch.load(state_dict, map_location=torch.device('cpu'))
-    msd = state_dict['model_state_dict']
-    if model_name == 'carp-640M' or model_name == 'carp-38M' or model_name == 'lrar-640M' or model_name=='lrar-38M':
-        msd = {k.split('module.')[0]: v for k, v in msd.items()}
-    else:
-        msd = {k.split('module.')[1]: v for k, v in msd.items()}
-    model.load_state_dict(msd)
+    if load:
+        state_dict = download_model(model_name)
+        # sd = torch.load(state_dict, map_location=torch.device('cpu'))
+        msd = state_dict['model_state_dict']
+        if model_name == 'carp-640M' or model_name == 'carp-38M' or model_name == 'lrar-640M' or model_name=='lrar-38M':
+            msd = {k.split('module.')[0]: v for k, v in msd.items()}
+        else:
+            msd = {k.split('module.')[1]: v for k, v in msd.items()}
+        model.load_state_dict(msd)
 
     return model, tokenizer
 
