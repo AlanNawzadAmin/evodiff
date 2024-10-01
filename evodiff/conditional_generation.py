@@ -5,7 +5,7 @@ import random
 import biotite.structure
 from biotite.structure.io import pdbx, pdb
 from biotite.structure.residues import get_residues
-from biotite.structure import filter_backbone
+from biotite.structure import filter_peptide_backbone
 from biotite.structure import get_chains
 from biotite.sequence import ProteinSequence
 import itertools
@@ -17,7 +17,7 @@ from tqdm import tqdm
 import urllib.request
 
 import evodiff
-from evodiff.plot import aa_reconstruction_parity_plot,
+from evodiff.plot import aa_reconstruction_parity_plot
 from evodiff.pretrained import OA_DM_640M, OA_DM_38M, CARP_640M, LR_AR_38M, LR_AR_640M
 from evodiff.utils import Tokenizer, run_omegafold, clean_pdb, run_tmscore
 from sequence_models.utils import parse_fasta
@@ -41,7 +41,7 @@ def load_structure(fpath, chain=None):
         with open(fpath) as fin:
             pdbf = pdb.PDBFile.read(fin)
         structure = pdb.get_structure(pdbf, model=1)
-    bbmask = filter_backbone(structure)
+    bbmask = filter_peptide_backbone(structure)
     structure = structure[bbmask]
     all_chains = get_chains(structure)
     if len(all_chains) == 0:
